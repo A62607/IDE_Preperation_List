@@ -1,0 +1,991 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Flood Preparation Checklist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,900;1,9..40,400&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font: 'DM Sans', sans-serif;
+      --mono: 'IBM Plex Mono', monospace;
+      --ink: #0d0d0d;
+      --ink-2: #444;
+      --ink-3: #888;
+      --surface: #f8f7f4;
+      --panel: #ffffff;
+      --border: rgba(0,0,0,0.09);
+      --border-strong: rgba(0,0,0,0.2);
+      --c-low:     #16a34a; --c-low-bg:  #f0fdf4; --c-low-mid:  #dcfce7;
+      --c-mon:     #2563eb; --c-mon-bg:  #eff6ff; --c-mon-mid:  #dbeafe;
+      --c-pre:     #d97706; --c-pre-bg:  #fffbeb; --c-pre-mid:  #fef3c7;
+      --c-hig:     #dc2626; --c-hig-bg:  #fff1f2; --c-hig-mid:  #ffe4e6;
+      --ra: var(--c-low); --rb: var(--c-low-bg); --rc: var(--c-low-mid);
+      --r-sm: 8px; --r-md: 14px; --r-lg: 20px;
+    }
+    body.risk-low     { --ra: var(--c-low); --rb: var(--c-low-bg); --rc: var(--c-low-mid); }
+    body.risk-monitor { --ra: var(--c-mon); --rb: var(--c-mon-bg); --rc: var(--c-mon-mid); }
+    body.risk-prepare { --ra: var(--c-pre); --rb: var(--c-pre-bg); --rc: var(--c-pre-mid); }
+    body.risk-high    { --ra: var(--c-hig); --rb: var(--c-hig-bg); --rc: var(--c-hig-mid); }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font);
+      background: var(--rb);
+      color: var(--ink);
+      line-height: 1.55;
+      min-height: 100vh;
+      transition: background 700ms ease;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page {
+      /* Wider page so the language + postcode controls fit on one row on a 14-inch MacBook. */
+      max-width: min(1360px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 28px 16px 60px;
+    }
+
+    /* ── Topbar ── */
+    .topbar {
+      display: grid;
+      grid-template-columns: max-content minmax(0, 1fr);
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-icon {
+      width: 40px; height: 40px;
+      background: var(--ra);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.25rem;
+      transition: background 700ms ease;
+      flex-shrink: 0;
+    }
+
+    .brand-name {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-2);
+    }
+
+    .topbar-right {
+      display: grid;
+      grid-template-columns: 150px max-content 170px max-content max-content;
+      align-items: center;
+      justify-content: end;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    #language { width: 150px; }
+
+    select {
+      font-family: var(--font);
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--ink);
+      background: var(--panel);
+      border: 1.5px solid var(--border-strong);
+      border-radius: var(--r-sm);
+      padding: 7px 28px 7px 10px;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 9px center;
+    }
+
+    .postcode-wrap {
+      /* Let the postcode label, combined input/dropdown and button join the main topbar grid. */
+      display: contents;
+    }
+
+    .postcode-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      white-space: nowrap;
+    }
+
+    .postcode-field {
+      position: relative;
+      width: 170px;
+      min-width: 0;
+    }
+
+    .postcode-input {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--ink);
+      background: var(--panel);
+      border: 1.5px solid var(--border-strong);
+      border-radius: var(--r-sm);
+      padding: 7px 28px 7px 10px;
+      width: 100%;
+      min-width: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 9px center;
+    }
+
+    .postcode-menu {
+      position: absolute;
+      z-index: 20;
+      top: calc(100% + 6px);
+      left: 0;
+      width: max-content;
+      min-width: 100%;
+      max-width: min(520px, 90vw);
+      max-height: 260px;
+      overflow: auto;
+      background: var(--panel);
+      border: 1.5px solid var(--border-strong);
+      border-radius: var(--r-sm);
+      box-shadow: 0 10px 26px rgba(0,0,0,0.12);
+      padding: 5px;
+      display: none;
+    }
+
+    .postcode-menu.open { display: block; }
+
+    .postcode-option {
+      width: 100%;
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      padding: 8px 10px;
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--ink);
+      font-family: var(--font);
+      font-size: 0.82rem;
+      text-align: left;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .postcode-option:hover,
+    .postcode-option:focus-visible {
+      background: var(--rc);
+      outline: none;
+    }
+
+    .postcode-option-code {
+      font-family: var(--mono);
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .postcode-option-place {
+      color: var(--ink-2);
+      font-weight: 500;
+    }
+
+    .postcode-input:focus,
+    select:focus,
+    .btn:focus-visible {
+      outline: 3px solid color-mix(in srgb, var(--ra) 35%, transparent);
+      outline-offset: 2px;
+    }
+
+    .btn {
+      font-family: var(--font);
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 8px 14px;
+      border-radius: var(--r-sm);
+      border: 1.5px solid var(--border-strong);
+      background: var(--panel);
+      color: var(--ink);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 150ms, transform 100ms;
+    }
+    .btn:hover { background: var(--surface); }
+    .btn:active { transform: scale(0.97); }
+
+    .btn-accent {
+      background: var(--ra);
+      border-color: var(--ra);
+      color: #fff;
+      transition: background 700ms ease, border-color 700ms ease, opacity 150ms;
+    }
+    .btn-accent:hover { opacity: 0.85; background: var(--ra); }
+
+    /* ── Hero ── */
+    .hero {
+      background: var(--panel);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 28px 32px;
+      margin-bottom: 14px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.05);
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: var(--ra);
+      transition: background 700ms ease;
+    }
+    .hero h1 {
+      font-size: clamp(1.5rem, 4vw, 2.1rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 6px;
+    }
+    .hero .subtitle {
+      font-size: 0.93rem;
+      color: var(--ink-2);
+    }
+
+    /* ── Safety note ── */
+    .safety-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: var(--rc);
+      border: 1.5px solid color-mix(in srgb, var(--ra) 40%, transparent);
+      border-radius: var(--r-md);
+      padding: 12px 16px;
+      margin-bottom: 14px;
+      font-size: 0.855rem;
+      color: var(--ink);
+      transition: background 700ms ease, border-color 700ms ease;
+    }
+    .safety-note .ni { font-size: 0.95rem; flex-shrink: 0; margin-top: 1px; }
+
+    /* ── Risk banner ── */
+    .risk-banner {
+      display: none;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      border-radius: var(--r-md);
+      margin-bottom: 14px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      border: 2px solid var(--ra);
+      background: var(--rc);
+      color: var(--ra);
+      transition: all 600ms ease;
+    }
+    .risk-banner .bi { font-size: 1.4rem; flex-shrink: 0; }
+    body.risk-prepare .risk-banner,
+    body.risk-high    .risk-banner { display: flex; }
+    body.risk-high    .risk-banner { animation: pulse-ring 1.6s ease-in-out infinite; }
+
+    @keyframes pulse-ring {
+      0%,100% { box-shadow: 0 0 0 0 rgba(220,38,38,0.3); }
+      50%      { box-shadow: 0 0 0 8px rgba(220,38,38,0); }
+    }
+
+    /* ── Grid ── */
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0,1fr) minmax(280px,380px);
+      gap: 14px;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 6px 20px rgba(0,0,0,0.05);
+    }
+
+    .card-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin-bottom: 16px;
+    }
+
+    /* ── Meter ── */
+    .meter-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+
+    .reading {
+      display: flex;
+      align-items: baseline;
+      gap: 3px;
+    }
+    .reading-val {
+      font-family: var(--mono);
+      font-size: 3rem;
+      font-weight: 600;
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+    .reading-unit {
+      font-family: var(--mono);
+      font-size: 1rem;
+      color: var(--ink-3);
+    }
+    .reading-sub {
+      font-size: 0.78rem;
+      color: var(--ink-3);
+      margin-top: 4px;
+    }
+
+    .location-sub {
+      font-size: 0.76rem;
+      color: var(--ink-2);
+      margin-top: 2px;
+      max-width: 260px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      background: var(--rc);
+      color: var(--ra);
+      border: 1.5px solid color-mix(in srgb, var(--ra) 50%, transparent);
+      transition: background 600ms ease, color 600ms ease, border-color 600ms ease;
+      white-space: nowrap;
+    }
+    .s-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--ra);
+      flex-shrink: 0;
+      transition: background 600ms ease;
+    }
+    body.risk-high .s-dot { animation: blink 1s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{opacity:1}50%{opacity:0.15} }
+
+    /* Tube */
+    .meter-body {
+      display: flex;
+      gap: 24px;
+      align-items: stretch;
+      margin-bottom: 18px;
+    }
+
+    .tube-outer { position: relative; flex-shrink: 0; }
+
+    .tube {
+      width: 48px;
+      height: 210px;
+      background: var(--rb);
+      border: 2px solid var(--border-strong);
+      border-radius: 100px;
+      overflow: hidden;
+      transition: background 700ms ease;
+      position: relative;
+    }
+    .tube-fill {
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 100%;
+      height: 0%;
+      background: linear-gradient(180deg, var(--ra) 0%, color-mix(in srgb, var(--ra) 60%, #000) 100%);
+      border-radius: 100px;
+      transition: height 900ms cubic-bezier(0.34,1.56,0.64,1), background 700ms ease;
+    }
+    .tube-fill::before {
+      content:'';
+      position:absolute; top:-10px; left:-25%;
+      width:150%; height:20px;
+      background:rgba(255,255,255,0.22);
+      border-radius:50%;
+      animation:wave 2.4s ease-in-out infinite;
+    }
+    .tube-fill::after {
+      content:'';
+      position:absolute; top:8px; left:8px;
+      width:7px; height:35%;
+      background:rgba(255,255,255,0.28);
+      border-radius:4px;
+    }
+    @keyframes wave { 0%,100%{transform:translateX(-5px)}50%{transform:translateX(5px)} }
+
+    .tube-ticks {
+      position:absolute; top:0; right:-30px;
+      height:100%;
+      display:flex; flex-direction:column; justify-content:space-between;
+      padding:4px 0;
+    }
+    .tick { display:flex; align-items:center; gap:3px; }
+    .tick-line { width:7px; height:1.5px; background:var(--border-strong); }
+    .tick-lbl { font-family:var(--mono); font-size:0.58rem; color:var(--ink-3); }
+
+    /* Threshold list */
+    .thr-list { flex:1; display:flex; flex-direction:column; gap:10px; justify-content:center; }
+    .thr-row { display:flex; align-items:center; gap:10px; }
+    .thr-pip { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+    .thr-info { flex:1; min-width:0; }
+    .thr-name { font-size:0.8rem; font-weight:700; line-height:1.2; }
+    .thr-range { font-family:var(--mono); font-size:0.67rem; color:var(--ink-3); }
+    .thr-bar { width:44px; height:4px; background:var(--border); border-radius:2px; overflow:hidden; flex-shrink:0; }
+    .thr-fill { height:100%; border-radius:2px; }
+
+    /* Meter footer */
+    .meter-foot {
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px; padding-top:16px; border-top:1px solid var(--border);
+      flex-wrap:wrap;
+    }
+    .meter-caption { font-size:0.73rem; color:var(--ink-3); flex:1; line-height:1.4; }
+
+    /* ── Checklist ── */
+    .cl-header {
+      display:flex; align-items:center; justify-content:space-between;
+      margin-bottom:16px;
+    }
+    .progress-wrap { display:flex; align-items:center; gap:8px; }
+    .progress-lbl { font-family:var(--mono); font-size:0.7rem; color:var(--ink-3); }
+    .progress-track { width:56px; height:4px; background:var(--border); border-radius:2px; overflow:hidden; }
+    .progress-fill { height:100%; background:var(--ra); border-radius:2px; width:0%; transition:width 300ms ease, background 700ms ease; }
+
+    .cl-section { margin-bottom:18px; }
+    .cl-section:last-child { margin-bottom:0; }
+
+    .cl-heading {
+      font-size:0.67rem; font-weight:700; letter-spacing:0.11em;
+      text-transform:uppercase; color:var(--ra);
+      margin-bottom:8px; padding-bottom:7px;
+      border-bottom:1.5px solid var(--rc);
+      transition:color 700ms ease, border-color 700ms ease;
+    }
+
+    .cl-item {
+      display:flex; align-items:flex-start; gap:11px;
+      padding:9px 0; border-bottom:1px solid var(--border);
+      cursor:pointer;
+    }
+    .cl-item:last-child { border-bottom:none; }
+
+    .chk-box {
+      width:19px; height:19px; border-radius:5px;
+      border:2px solid var(--border-strong);
+      background:var(--panel);
+      flex-shrink:0; margin-top:1px;
+      display:flex; align-items:center; justify-content:center;
+      transition:background 200ms, border-color 200ms;
+    }
+    .chk-box svg { opacity:0; transform:scale(0.5); transition:opacity 150ms, transform 150ms; }
+
+    input[type="checkbox"] { display:none; }
+
+    input[type="checkbox"]:checked + .chk-box {
+      background:var(--ra); border-color:var(--ra);
+    }
+    input[type="checkbox"]:checked + .chk-box svg { opacity:1; transform:scale(1); }
+    input[type="checkbox"]:checked ~ .cl-text { opacity:0.38; text-decoration:line-through; }
+
+    .cl-text { font-size:0.88rem; line-height:1.5; transition:opacity 200ms; }
+
+    /* ── Footer ── */
+    .page-footer {
+      margin-top:24px; padding-top:14px;
+      border-top:1px solid var(--border);
+      font-size:0.78rem; color:var(--ink-3);
+    }
+
+    /* RTL */
+    [dir="rtl"] .cl-item    { flex-direction:row-reverse; }
+    [dir="rtl"]              { text-align:right; }
+    [dir="rtl"] .meter-top  { flex-direction:row-reverse; }
+    [dir="rtl"] .topbar      { flex-direction:row-reverse; }
+    [dir="rtl"] .topbar-right{ flex-direction:row-reverse; }
+    [dir="rtl"] .thr-row    { flex-direction:row-reverse; }
+
+    @media (max-width:1100px) {
+      .topbar {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .topbar-right {
+        grid-template-columns: 150px max-content 170px max-content max-content;
+        justify-content: start;
+      }
+      #resetBtn {
+        grid-column: 1 / -1;
+        justify-self: start;
+      }
+    }
+
+    @media (max-width:720px) {
+      .grid { grid-template-columns:1fr; }
+      .hero { padding:20px; }
+      .meter-body { gap:16px; }
+      .topbar-right {
+        display:flex;
+        flex-wrap:wrap;
+      }
+      .postcode-wrap {
+        display:flex;
+        align-items:center;
+        gap:8px;
+        flex-wrap:wrap;
+      }
+      #language { width:auto; }
+      .postcode-field { width:170px; max-width:100%; }
+      .postcode-input { width:100%; }
+      #resetBtn { grid-column:auto; }
+    }
+    @media print {
+      .btn,.topbar-right { display:none; }
+      body { background:#fff; }
+    }
+  </style>
+</head>
+<body class="risk-low">
+<div class="page">
+
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-icon">🌊</div>
+      <span class="brand-name" id="languageLabel">Language</span>
+    </div>
+    <div class="topbar-right">
+      <select id="language">
+        <option value="en">English</option>
+        <option value="zh">中文</option>
+        <option value="vi">Tiếng Việt</option>
+        <option value="ar">العربية</option>
+        <option value="es">Español</option>
+        <option value="ja">日本語</option>
+      </select>
+      <div class="postcode-wrap">
+        <span class="postcode-label" id="postcodeLabel">Postcode</span>
+        <div class="postcode-field">
+          <input class="postcode-input" id="postcodeInput" type="text" maxlength="18" value="3032" placeholder="e.g. 3032" aria-label="Type or select postcode" autocomplete="off" aria-haspopup="listbox" aria-expanded="false" />
+          <div class="postcode-menu" id="postcodeMenu" role="listbox" aria-label="Postcode options"></div>
+        </div>
+        <button class="btn" id="postcodeBtn" type="button">Apply postcode</button>
+      </div>
+      <button class="btn" id="resetBtn" type="button">Reset checklist</button>
+    </div>
+  </div>
+
+  <div class="hero">
+    <h1 id="title">Flood Preparation Checklist</h1>
+    <p class="subtitle" id="subtitle">Use this quick checklist before and during a flood warning.</p>
+  </div>
+
+  <div class="safety-note">
+    <span class="ni">ℹ️</span>
+    <span id="safetyNote">This page is a preparation guide only. In an emergency, follow official warnings and call emergency services if life is at risk.</span>
+  </div>
+
+  <div class="risk-banner" id="riskBanner" role="alert">
+    <span class="bi" id="bannerIcon">⚠️</span>
+    <span id="bannerText">Prepare now — water levels are rising.</span>
+  </div>
+
+  <div class="grid">
+
+    <!-- Meter card -->
+    <section class="card" aria-live="polite">
+      <p class="card-label" id="meterTitle">Water level</p>
+
+      <div class="meter-top">
+        <div>
+          <div class="reading">
+            <span class="reading-val" id="levelValue">0.6</span>
+            <span class="reading-unit">m</span>
+          </div>
+          <p class="reading-sub" id="levelLabel">Current example level</p>
+          <p class="location-sub" id="locationNote">Prototype location: 3032 — Maribyrnong / Ascot Vale</p>
+        </div>
+        <div class="status-badge" id="riskStatus">
+          <span class="s-dot"></span>
+          <span id="riskLabel">Low risk</span>
+        </div>
+      </div>
+
+      <div class="meter-body">
+        <div class="tube-outer">
+          <div class="tube">
+            <div class="tube-fill" id="waterFill"></div>
+          </div>
+          <div class="tube-ticks">
+            <div class="tick"><div class="tick-line"></div><span class="tick-lbl">3.2</span></div>
+            <div class="tick"><div class="tick-line"></div><span class="tick-lbl">2.4</span></div>
+            <div class="tick"><div class="tick-line"></div><span class="tick-lbl">1.7</span></div>
+            <div class="tick"><div class="tick-line"></div><span class="tick-lbl">1.0</span></div>
+            <div class="tick"><div class="tick-line"></div><span class="tick-lbl">0</span></div>
+          </div>
+        </div>
+
+        <div class="thr-list" id="thresholds"></div>
+      </div>
+
+      <div class="meter-foot">
+        <p class="meter-caption" id="fakeDataNote">Prototype only: this is fake data, not live flood information.</p>
+        <button class="btn btn-accent" id="nextReadingBtn" type="button">Next reading ↓</button>
+      </div>
+    </section>
+
+    <!-- Checklist card -->
+    <section class="card">
+      <div class="cl-header">
+        <p class="card-label" id="checklistTitle">Preparation checklist</p>
+        <div class="progress-wrap">
+          <span class="progress-lbl" id="progressLabel">0/9</span>
+          <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+      </div>
+      <div id="checklist"></div>
+    </section>
+
+  </div>
+
+  <!-- <footer class="page-footer">
+    <p id="footerText">This checklist is designed to be updated easily. New items can be added by editing the checklist data in the page script.</p>
+  </footer> -->
+
+</div>
+<script>
+  const maxLevel = 3.2;
+  let lang = 'en';
+
+  // Prototype postcode lookup table.
+  // These are simulated example values for demonstration only.
+  // Replace this table with official address-level flood mapping, warning zones,
+  // river gauge data, or council/SES/BoM data for a real implementation.
+  const POSTCODE_DATA = {
+    // City of Maribyrnong prototype postcodes.
+    // Risk values below are simulated for demonstration only, not official flood data.
+    '3011': { name: 'Footscray / Seddon', level: 1.8 },
+    '3012': { name: 'Kingsville / Maidstone / Tottenham / West Footscray', level: 1.1 },
+    '3013': { name: 'Yarraville', level: 0.9 },
+    '3019': { name: 'Braybrook', level: 0.6 },
+    '3032': { name: 'Maribyrnong', level: 2.6 }
+  };
+
+  const POSTCODE_OPTIONS = [
+    { code: 'Unknown', place: 'Unknown / not listed' },
+    ...Object.entries(POSTCODE_DATA).map(([code, data]) => ({ code, place: data.name }))
+  ];
+
+  const samplePostcodes = Object.keys(POSTCODE_DATA);
+  let sampleIndex = samplePostcodes.indexOf('3032');
+  let currentPostcode = '3032';
+  let currentLevel = POSTCODE_DATA[currentPostcode].level;
+  let currentPlace = POSTCODE_DATA[currentPostcode].name;
+  let postcodeKnown = true;
+
+  const UI = {
+    en: { postcodeLabel:'Postcode', applyPostcode:'Apply postcode', nextSample:'Try sample postcode ↓', locationPrefix:'Prototype location', unknownStatus:'Unknown postcode', unknownPostcode:'no specific postcode selected; showing a general low-risk example' },
+    zh: { postcodeLabel:'邮编', applyPostcode:'应用邮编', nextSample:'尝试示例邮编 ↓', locationPrefix:'原型位置', unknownStatus:'未知邮编', unknownPostcode:'未选择具体邮编；显示一般低风险示例' },
+    vi: { postcodeLabel:'Mã bưu điện', applyPostcode:'Áp dụng', nextSample:'Thử mã mẫu ↓', locationPrefix:'Vị trí nguyên mẫu', unknownStatus:'Mã không rõ', unknownPostcode:'chưa chọn mã bưu điện cụ thể; hiển thị ví dụ rủi ro thấp chung' },
+    ar: { postcodeLabel:'الرمز البريدي', applyPostcode:'تطبيق', nextSample:'جرّب رمزًا نموذجيًا ↓', locationPrefix:'موقع النموذج', unknownStatus:'رمز غير معروف', unknownPostcode:'لم يتم اختيار رمز بريدي محدد؛ يتم عرض مثال عام منخفض الخطر' },
+    es: { postcodeLabel:'Código postal', applyPostcode:'Aplicar', nextSample:'Probar código de ejemplo ↓', locationPrefix:'Ubicación del prototipo', unknownStatus:'Código no reconocido', unknownPostcode:'no se ha seleccionado un código postal específico; se muestra un ejemplo general de bajo riesgo' },
+    ja: { postcodeLabel:'郵便番号', applyPostcode:'適用', nextSample:'サンプル郵便番号 ↓', locationPrefix:'プロトタイプ位置', unknownStatus:'不明な郵便番号', unknownPostcode:'特定の郵便番号が選択されていません。一般的な低リスク例を表示します' }
+  };
+
+  const RISK = [
+    { cls:'risk-low',     icon:'🟢', pip:'#16a34a', bar:'25%',  banner:null },
+    { cls:'risk-monitor', icon:'🔵', pip:'#2563eb', bar:'50%',  banner:null },
+    { cls:'risk-prepare', icon:'⚠️', pip:'#d97706', bar:'75%',  banner:{ en:'Prepare now — water levels are rising.', zh:'请立即准备 — 水位正在上升。', vi:'Hãy chuẩn bị ngay — mực nước đang dâng cao.', ar:'استعد الآن — مستويات المياه ترتفع.', es:'Prepárese ahora — los niveles del agua están subiendo.', ja:'今すぐ準備を — 水位が上昇しています。' } },
+    { cls:'risk-high',    icon:'🚨', pip:'#dc2626', bar:'100%', banner:{ en:'HIGH RISK — Take action immediately.', zh:'高风险 — 请立即采取行动。', vi:'NGUY CƠ CAO — Hành động ngay lập tức.', ar:'خطر مرتفع — تصرف فورًا.', es:'ALTO RIESGO — Tome medidas de inmediato.', ja:'高リスク — 今すぐ行動してください。' } }
+  ];
+
+  const CONTENT = {
+    en:{dir:'ltr',title:'Flood Preparation Checklist',subtitle:'Use this quick checklist before and during a flood warning.',languageLabel:'Language',reset:'Reset checklist',note:'This page is a preparation guide only. In an emergency, follow official warnings and call emergency services if life is at risk.',checklistTitle:'Preparation checklist',meterTitle:'Water level',levelLabel:'Current example level',nextReading:'Next reading ↓',fakeDataNote:'Prototype only: this is fake data, not live flood information.',thresholds:['Low risk','Monitor','Prepare','High risk'],status:['Low risk','Monitor','Prepare','High risk'],footer:'This checklist is designed to be updated easily. New items can be added by editing the checklist data in the page script.',sections:[{heading:'Before flooding is expected',items:['Know your local flood risk and safest evacuation route.','Prepare an emergency kit with water, food, torch, radio, medication and important documents.','Save emergency contacts and check official warning sources.']},{heading:'When a flood warning is issued',items:['Charge your phone and power bank.','Move valuables, chemicals and electrical items to higher ground.','Check on family, neighbours and people who may need support.']},{heading:'If you need to leave',items:['Take your emergency kit, medication, phone, charger and identification.','Turn off electricity, gas and water if it is safe to do so.','Do not walk, swim or drive through floodwater.']}]},
+    zh:{dir:'ltr',title:'洪水准备清单',subtitle:'在洪水预警前和预警期间使用此快速清单。',languageLabel:'语言',reset:'重置清单',note:'本页面仅作为准备指南。紧急情况下，请遵循官方警报；如有生命危险，请联系紧急服务。',checklistTitle:'准备清单',meterTitle:'水位',levelLabel:'当前示例水位',nextReading:'下一读数 ↓',fakeDataNote:'仅用于原型展示：这是模拟数据，不是实时洪水信息。',thresholds:['低风险','关注','准备','高风险'],status:['低风险','关注','准备','高风险'],footer:'此清单便于更新。可以通过编辑页面脚本中的清单数据添加新项目。',sections:[{heading:'洪水发生前',items:['了解当地洪水风险和最安全的撤离路线。','准备应急包，包括水、食物、手电筒、收音机、药物和重要文件。','保存紧急联系电话，并查看官方预警渠道。']},{heading:'发布洪水预警时',items:['给手机和充电宝充满电。','将贵重物品、化学品和电器移到高处。','联系家人、邻居和可能需要帮助的人。']},{heading:'如果需要撤离',items:['带上应急包、药物、手机、充电器和身份证明。','在安全的情况下关闭电、燃气和水。','不要步行、游泳或开车穿过洪水。']}]},
+    vi:{dir:'ltr',title:'Danh sách chuẩn bị ứng phó lũ lụt',subtitle:'Dùng danh sách ngắn này trước và trong khi có cảnh báo lũ.',languageLabel:'Ngôn ngữ',reset:'Đặt lại danh sách',note:'Trang này chỉ là hướng dẫn chuẩn bị. Trong trường hợp khẩn cấp, hãy làm theo cảnh báo chính thức và gọi dịch vụ khẩn cấp nếu tính mạng bị đe dọa.',checklistTitle:'Danh sách chuẩn bị',meterTitle:'Mực nước',levelLabel:'Mực nước ví dụ hiện tại',nextReading:'Số liệu tiếp theo ↓',fakeDataNote:'Chỉ là nguyên mẫu: đây là dữ liệu giả, không phải thông tin lũ trực tiếp.',thresholds:['Rủi ro thấp','Theo dõi','Chuẩn bị','Nguy cơ cao'],status:['Rủi ro thấp','Theo dõi','Chuẩn bị','Nguy cơ cao'],footer:'Danh sách này được thiết kế để dễ cập nhật.',sections:[{heading:'Trước khi có nguy cơ lũ',items:['Biết nguy cơ lũ tại địa phương và tuyến đường sơ tán an toàn nhất.','Chuẩn bị bộ khẩn cấp gồm nước, thức ăn, đèn pin, radio, thuốc và giấy tờ quan trọng.','Lưu số liên hệ khẩn cấp và kiểm tra nguồn cảnh báo chính thức.']},{heading:'Khi có cảnh báo lũ',items:['Sạc điện thoại và pin dự phòng.','Di chuyển đồ giá trị, hóa chất và thiết bị điện lên nơi cao hơn.','Kiểm tra tình hình của gia đình, hàng xóm và người cần hỗ trợ.']},{heading:'Nếu cần rời đi',items:['Mang theo bộ khẩn cấp, thuốc, điện thoại, bộ sạc và giấy tờ tùy thân.','Tắt điện, gas và nước nếu an toàn.','Không đi bộ, bơi hoặc lái xe qua nước lũ.']}]},
+    ar:{dir:'rtl',title:'قائمة الاستعداد للفيضانات',subtitle:'استخدم هذه القائمة السريعة قبل وأثناء تحذير الفيضانات.',languageLabel:'اللغة',reset:'إعادة ضبط القائمة',note:'هذه الصفحة دليل للاستعداد فقط. في حالة الطوارئ، اتبع التحذيرات الرسمية واتصل بخدمات الطوارئ إذا كان هناك خطر على الحياة.',checklistTitle:'قائمة الاستعداد',meterTitle:'مستوى المياه',levelLabel:'المستوى الحالي كمثال',nextReading:'القراءة التالية ↓',fakeDataNote:'نموذج أولي فقط: هذه بيانات وهمية وليست معلومات فيضانات مباشرة.',thresholds:['خطر منخفض','راقب','استعد','خطر مرتفع'],status:['خطر منخفض','راقب','استعد','خطر مرتفع'],footer:'تم تصميم هذه القائمة لتكون سهلة التحديث.',sections:[{heading:'قبل توقع حدوث فيضان',items:['اعرف خطر الفيضانات المحلي وأأمن طريق للإخلاء.','جهز حقيبة طوارئ بها ماء وطعام ومصباح وراديو وأدوية ووثائق مهمة.','احفظ أرقام الطوارئ وتابع مصادر التحذير الرسمية.']},{heading:'عند صدور تحذير من فيضان',items:['اشحن الهاتف وبنك الطاقة.','انقل الأشياء الثمينة والمواد الكيميائية والأجهزة الكهربائية إلى مكان أعلى.','اطمئن على الأسرة والجيران والأشخاص الذين قد يحتاجون إلى مساعدة.']},{heading:'إذا احتجت إلى المغادرة',items:['خذ حقيبة الطوارئ والأدوية والهاتف والشاحن والهوية.','أغلق الكهرباء والغاز والماء إذا كان ذلك آمنًا.','لا تمشِ أو تسبح أو تقد السيارة عبر مياه الفيضانات.']}]},
+    es:{dir:'ltr',title:'Lista de preparación para inundaciones',subtitle:'Use esta lista rápida antes y durante una alerta de inundación.',languageLabel:'Idioma',reset:'Restablecer lista',note:'Esta página es solo una guía de preparación. En una emergencia, siga las advertencias oficiales y llame a los servicios de emergencia si hay riesgo para la vida.',checklistTitle:'Lista de preparación',meterTitle:'Nivel del agua',levelLabel:'Nivel de ejemplo actual',nextReading:'Siguiente lectura ↓',fakeDataNote:'Solo prototipo: estos son datos ficticios, no información de inundación en vivo.',thresholds:['Riesgo bajo','Vigilar','Prepararse','Alto riesgo'],status:['Riesgo bajo','Vigilar','Prepararse','Alto riesgo'],footer:'Esta lista está diseñada para actualizarse fácilmente.',sections:[{heading:'Antes de una posible inundación',items:['Conozca el riesgo de inundación en su zona y la ruta de evacuación más segura.','Prepare un kit de emergencia con agua, comida, linterna, radio, medicamentos y documentos importantes.','Guarde los contactos de emergencia y revise las fuentes oficiales de alerta.']},{heading:'Cuando se emite una alerta de inundación',items:['Cargue su teléfono y batería portátil.','Mueva objetos de valor, productos químicos y aparatos eléctricos a un lugar más alto.','Revise a su familia, vecinos y personas que puedan necesitar apoyo.']},{heading:'Si necesita salir',items:['Lleve su kit de emergencia, medicamentos, teléfono, cargador e identificación.','Corte la electricidad, el gas y el agua si es seguro hacerlo.','No camine, nade ni conduzca por agua de inundación.']}]},
+    ja:{dir:'ltr',title:'洪水への備えチェックリスト',subtitle:'洪水警報の前後にこの簡単なチェックリストを使ってください。',languageLabel:'言語',reset:'チェックリストをリセット',note:'このページは備えのための案内です。緊急時は公式の警報に従い、命に危険がある場合は緊急サービスに連絡してください。',checklistTitle:'備えチェックリスト',meterTitle:'水位',levelLabel:'現在の例示水位',nextReading:'次の読み取り ↓',fakeDataNote:'プロトタイプのみ：これは仮データであり、実際の洪水情報ではありません。',thresholds:['低リスク','注意','準備','高リスク'],status:['低リスク','注意','準備','高リスク'],footer:'このチェックリストは簡単に更新できるよう設計されています。',sections:[{heading:'洪水が予想される前に',items:['地域の洪水リスクと最も安全な避難経路を確認する。','水、食料、懐中電灯、ラジオ、薬、重要書類を入れた非常持ち出し袋を準備する。','緊急連絡先を保存し、公式の警報情報を確認する。']},{heading:'洪水警報が出たとき',items:['携帯電話とモバイルバッテリーを充電する。','貴重品、薬品、電気製品を高い場所へ移す。','家族、近所の人、支援が必要な人の状況を確認する。']},{heading:'避難が必要な場合',items:['非常持ち出し袋、薬、携帯電話、充電器、身分証明書を持って行く。','安全であれば電気、ガス、水道を止める。','洪水の水の中を歩いたり、泳いだり、車で通ったりしない。']}]}
+  };
+
+  // DOM helpers
+  const $ = id => document.getElementById(id);
+  const setText = (id, value) => {
+    const el = $(id);
+    if (el) el.textContent = value;
+  };
+  const t = key => (UI[lang] && UI[lang][key]) || UI.en[key];
+
+  const checklistEl=$('checklist'), langSel=$('language'), resetBtn=$('resetBtn');
+  const nextBtn=$('nextReadingBtn'), fill=$('waterFill'), lvl=$('levelValue');
+  const riskLabel=$('riskLabel'), bannerIcon=$('bannerIcon'), bannerText=$('bannerText');
+  const thrEl=$('thresholds'), progLbl=$('progressLabel'), progFill=$('progressFill');
+  const postcodeInput=$('postcodeInput'), postcodeBtn=$('postcodeBtn'), locationNote=$('locationNote');
+  const postcodeMenu=$('postcodeMenu');
+
+  const skey = l => `floodCL_${l}`;
+
+  function riskIdx(v) { return v<1?0:v<1.7?1:v<2.4?2:3; }
+
+  function applyRisk(idx) {
+    const r = RISK[idx];
+    document.body.classList.remove('risk-low','risk-monitor','risk-prepare','risk-high');
+    document.body.classList.add(r.cls);
+    if (r.banner) {
+      bannerIcon.textContent = r.icon;
+      bannerText.textContent = r.banner[lang]||r.banner.en;
+    }
+  }
+
+  function renderPostcodeMenu(filter = '') {
+    if (!postcodeMenu) return;
+    const q = String(filter || '').trim().toLowerCase();
+    const options = POSTCODE_OPTIONS.filter(opt => {
+      if (!q) return true;
+      return opt.code.toLowerCase().includes(q) || opt.place.toLowerCase().includes(q);
+    });
+
+    postcodeMenu.innerHTML = '';
+    const list = options.length ? options : POSTCODE_OPTIONS;
+    list.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'postcode-option';
+      btn.setAttribute('role', 'option');
+      btn.dataset.value = opt.code;
+      btn.innerHTML = `<span class="postcode-option-code">${opt.code}</span><span class="postcode-option-place">${opt.place}</span>`;
+      btn.addEventListener('mousedown', e => {
+        e.preventDefault();
+        applyPostcode(opt.code);
+        hidePostcodeMenu();
+      });
+      postcodeMenu.appendChild(btn);
+    });
+  }
+
+  function showPostcodeMenu(filter = '') {
+    if (!postcodeMenu || !postcodeInput) return;
+    renderPostcodeMenu(filter);
+    postcodeMenu.classList.add('open');
+    postcodeInput.setAttribute('aria-expanded', 'true');
+  }
+
+  function hidePostcodeMenu() {
+    if (!postcodeMenu || !postcodeInput) return;
+    postcodeMenu.classList.remove('open');
+    postcodeInput.setAttribute('aria-expanded', 'false');
+  }
+
+  function normalisePostcode(value) {
+    const raw = String(value || '').trim();
+    if (!raw || raw.toLowerCase().startsWith('unknown')) {
+      return { pc: '', display: 'Unknown', isUnknownChoice: true };
+    }
+    if (/^\d{4}$/.test(raw)) {
+      return { pc: raw, display: raw, isUnknownChoice: false };
+    }
+    const labelledMatch = raw.match(/\b\d{4}\b/);
+    if (labelledMatch) {
+      return { pc: labelledMatch[0], display: labelledMatch[0], isUnknownChoice: false };
+    }
+    return { pc: raw, display: raw, isUnknownChoice: false };
+  }
+
+  function syncPostcodeControl(displayValue) {
+    if (postcodeInput) postcodeInput.value = displayValue;
+  }
+
+  function updateLocationNote() {
+    if (!locationNote) return;
+    if (postcodeKnown) {
+      locationNote.textContent = `${t('locationPrefix')}: ${currentPostcode} — ${currentPlace} (simulated)`;
+    } else {
+      locationNote.textContent = `${t('locationPrefix')}: ${currentPostcode || 'Unknown'} — ${t('unknownPostcode')}`;
+    }
+  }
+
+  function applyPostcode(value) {
+    const { pc, display, isUnknownChoice } = normalisePostcode(value);
+    const profile = !isUnknownChoice ? POSTCODE_DATA[pc] : null;
+
+    if (profile) {
+      currentPostcode = pc;
+      postcodeKnown = true;
+      currentLevel = profile.level;
+      currentPlace = profile.name;
+      sampleIndex = samplePostcodes.indexOf(pc);
+      syncPostcodeControl(pc);
+    } else {
+      currentPostcode = isUnknownChoice ? 'Unknown' : (pc || 'Unknown');
+      postcodeKnown = false;
+      currentLevel = 0.4;
+      currentPlace = '';
+      syncPostcodeControl(display || pc || 'Unknown');
+    }
+
+    updateLocationNote();
+    updateMeter();
+  }
+
+  function updateMeter() {
+    const d = CONTENT[lang], v = currentLevel;
+    const pct = Math.min(100,Math.max(0,(v/maxLevel)*100));
+    const idx = riskIdx(v);
+    lvl.textContent = v.toFixed(1);
+    fill.style.height = `${pct}%`;
+    riskLabel.textContent = postcodeKnown ? d.status[idx] : t('unknownStatus');
+    applyRisk(idx);
+  }
+
+  function renderThresholds(l) {
+    const labels = CONTENT[l].thresholds;
+    const ranges = ['0–1.0 m','1.0–1.7 m','1.7–2.4 m','2.4 m+'];
+    thrEl.innerHTML = '';
+    RISK.forEach((r,i) => {
+      thrEl.innerHTML += `<div class="thr-row">
+        <div class="thr-pip" style="background:${r.pip}"></div>
+        <div class="thr-info">
+          <div class="thr-name">${labels[i]}</div>
+          <div class="thr-range">${ranges[i]}</div>
+        </div>
+        <div class="thr-bar"><div class="thr-fill" style="background:${r.pip};width:${r.bar}"></div></div>
+      </div>`;
+    });
+  }
+
+  function updateProgress(l, checked) {
+    const d = CONTENT[l];
+    const total = d.sections.reduce((s,sec)=>s+sec.items.length,0);
+    const done = Object.values(checked).filter(Boolean).length;
+    progLbl.textContent = `${done}/${total}`;
+    progFill.style.width = total ? `${done/total*100}%` : '0%';
+  }
+
+  function render(l) {
+    lang = l;
+    const d = CONTENT[l];
+    document.documentElement.lang = l;
+    document.documentElement.dir = d.dir;
+
+    setText('title', d.title);
+    setText('subtitle', d.subtitle);
+    setText('languageLabel', d.languageLabel);
+    setText('resetBtn', d.reset);
+    setText('safetyNote', d.note);
+    setText('footerText', d.footer); // Safe even when footer is commented out.
+    setText('checklistTitle', d.checklistTitle);
+    setText('meterTitle', d.meterTitle);
+    setText('levelLabel', d.levelLabel);
+    setText('nextReadingBtn', t('nextSample'));
+    setText('fakeDataNote', d.fakeDataNote);
+    setText('postcodeLabel', t('postcodeLabel'));
+    setText('postcodeBtn', t('applyPostcode'));
+
+    renderThresholds(l);
+    updateLocationNote();
+    updateMeter();
+
+    const checked = JSON.parse(localStorage.getItem(skey(l))||'{}');
+    checklistEl.innerHTML = '';
+
+    d.sections.forEach((sec,si) => {
+      const sEl = document.createElement('div');
+      sEl.className = 'cl-section';
+      const h = document.createElement('div');
+      h.className = 'cl-heading';
+      h.textContent = sec.heading;
+      sEl.appendChild(h);
+
+      sec.items.forEach((item,ii) => {
+        const id = `${l}-${si}-${ii}`;
+        const row = document.createElement('label');
+        row.className = 'cl-item';
+        row.htmlFor = id;
+
+        const inp = document.createElement('input');
+        inp.type='checkbox'; inp.id=id; inp.checked=!!checked[id];
+
+        const box = document.createElement('div');
+        box.className = 'chk-box';
+        box.innerHTML = `<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 3.5l2.8 2.8L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+        const txt = document.createElement('span');
+        txt.className='cl-text'; txt.textContent=item;
+
+        inp.addEventListener('change', () => {
+          checked[id]=inp.checked;
+          localStorage.setItem(skey(l),JSON.stringify(checked));
+          updateProgress(l,checked);
+        });
+
+        row.appendChild(inp); row.appendChild(box); row.appendChild(txt);
+        sEl.appendChild(row);
+      });
+
+      checklistEl.appendChild(sEl);
+    });
+
+    updateProgress(l, checked);
+  }
+
+  langSel.addEventListener('change', e => render(e.target.value));
+  resetBtn.addEventListener('click', () => { localStorage.removeItem(skey(lang)); render(lang); });
+
+  postcodeBtn.addEventListener('click', () => {
+    applyPostcode(postcodeInput.value);
+    hidePostcodeMenu();
+  });
+  postcodeInput.addEventListener('focus', () => showPostcodeMenu(''));
+  postcodeInput.addEventListener('click', () => showPostcodeMenu(''));
+  postcodeInput.addEventListener('input', e => {
+    const raw = String(e.target.value || '').trim();
+    showPostcodeMenu(raw);
+    if (/^\d{4}$/.test(raw) && POSTCODE_DATA[raw]) {
+      applyPostcode(raw);
+    } else if (raw.toLowerCase().startsWith('unknown')) {
+      applyPostcode(raw);
+    }
+  });
+  postcodeInput.addEventListener('change', e => applyPostcode(e.target.value));
+  postcodeInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      applyPostcode(postcodeInput.value);
+      hidePostcodeMenu();
+    }
+    if (e.key === 'Escape') hidePostcodeMenu();
+  });
+  document.addEventListener('mousedown', e => {
+    if (!postcodeMenu || !postcodeInput) return;
+    if (!postcodeInput.contains(e.target) && !postcodeMenu.contains(e.target)) hidePostcodeMenu();
+  });
+
+  nextBtn.addEventListener('click', () => {
+    sampleIndex = (sampleIndex + 1) % samplePostcodes.length;
+    applyPostcode(samplePostcodes[sampleIndex]);
+  });
+
+  renderPostcodeMenu();
+  render('en');
+</script>
+</body>
+</html>
